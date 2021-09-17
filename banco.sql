@@ -2,6 +2,9 @@ CREATE DATABASE banco CHARACTER SET latin1 COLLATE latin1_spanish_ci;
 
 USE banco;
 
+#--------------------------------------------------
+# CREACIÓN DE ENTIDADES
+
 CREATE TABLE Ciudad(
 	cod_postal SMALLINT CHECK (cod_postal > 999 AND cod_postal < 10000),
 	nombre VARCHAR(45),
@@ -180,3 +183,17 @@ CREATE TABLE Transferencia(
 	destino INT CHECK (nro_doc > 9999999 AND nro_doc < 100000000) REFERENCES Cliente_CA.nro_ca,
 	PRIMARY KEY (nro_trans)
 ) ENGINE=InnoDB;
+
+#--------------------------------------------------
+# CREACIÓN DE USUARIOS
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+GRANT ALL PRIVILEGES ON banco.* TO 'admin'@'localhost' WITH GRANT OPTION;
+
+DROP USER IF EXISTS ''@'localhost';
+
+CREATE USER 'empleado' IDENTIFIED BY 'empleado';
+GRANT SELECT ON banco.Empleado, banco.Sucursal, banco.Tasa_Plazo_Fijo, banco.Tasa_Prestamo, banco.Prestamo, banco.Plazo_Fijo, banco.Plazo_Cliente, banco.Caja_Ahorro, banco.Tarjeta, banco.Cliente_CA, banco.Cliente, banco.Pago TO 'empleado';
+GRANT INSERT ON banco.Prestamo, banco.Plazo_Fijo, banco.Plazo_Cliente, banco.Caja_Ahorro, banco.Tarjeta, banco.Cliente_CA, banco.Cliente, banco.Pago TO 'empleado';
+GRANT UPDATE ON banco.Cliente_CA, banco.Cliente, banco.Pago TO 'empleado'; 
+
