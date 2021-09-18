@@ -36,7 +36,7 @@ CREATE TABLE Empleado(
 ) ENGINE=InnoDB;
 
 CREATE TABLE Cliente(
-	nro_cliente SMALLINT CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
+	nro_cliente SMALLINT CHECK (nro_cliente > 9999 AND nro_cliente < 100000), 
 	apellido VARCHAR(45),
 	nombre VARCHAR(45),
 	tipo_doc VARCHAR(3),
@@ -57,7 +57,7 @@ CREATE TABLE Plazo_Fijo(
 	PRIMARY KEY (nro_plazo)
 ) ENGINE=InnoDB;
 
-CREATE TABLE Taza_Plazo_Fijo(
+CREATE TABLE Tasa_Plazo_Fijo(
 	periodo SMALLINT CHECK (periodo > 99 AND periodo < 1000),
 	monto_inf DOUBLE CHECK (monto_inf > 0),
 	monto_sup DOUBLE CHECK (monto_inf > 0),
@@ -85,7 +85,7 @@ CREATE TABLE Prestamo(
 ) ENGINE=InnoDB;
 
 CREATE TABLE Pago(
-	nro_prestamo INT CHECK (nro_doc > 9999999 AND nro_doc < 100000000) REFERENCES Pago.nro_prestamo,
+	nro_prestamo INT CHECK (nro_doc > 9999999 AND nro_doc < 100000000) REFERENCES Prestamo.nro_prestamo,
 	nro_pago TINYINT CHECK (nro_pago > 9 AND nro_pago < 100),
 	fecha_venc DATE,
 	fecha_pago DATE,
@@ -119,7 +119,7 @@ CREATE TABLE Tarjeta(
 	CVT CHAR(32),
 	fecha_venc DATE,
 	nro_cliente SMALLINT CHECK (nro_cliente > 9999 AND nro_cliente < 100000) REFERENCES Cliente_CA.nro_cliente,
-	nro_ca INT CHECK (nro_doc > 9999999 AND nro_doc < 100000000) REFERENCES CLiente_CA.nro_ca,
+	nro_ca INT CHECK (nro_doc > 9999999 AND nro_doc < 100000000) REFERENCES Cliente_CA.nro_ca,
 	PRIMARY KEY (nro_tarjeta)
 ) ENGINE=InnoDB;
 
@@ -185,6 +185,12 @@ CREATE TABLE Transferencia(
 ) ENGINE=InnoDB;
 
 #--------------------------------------------------
+# CREACIÓN DE VISTAS
+
+CREATE VIEW trans_cajas_ahorro AS
+SELECT banco.Caja_Ahorro.nro_ca, banco.Caja_Ahorro.saldo, banco.Transaccion.nro_trans, banco.Transaccion.fecha, banco.Transaccion.hora,  
+
+#--------------------------------------------------
 # CREACIÓN DE USUARIOS
 
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
@@ -196,4 +202,8 @@ CREATE USER 'empleado' IDENTIFIED BY 'empleado';
 GRANT SELECT ON banco.Empleado, banco.Sucursal, banco.Tasa_Plazo_Fijo, banco.Tasa_Prestamo, banco.Prestamo, banco.Plazo_Fijo, banco.Plazo_Cliente, banco.Caja_Ahorro, banco.Tarjeta, banco.Cliente_CA, banco.Cliente, banco.Pago TO 'empleado';
 GRANT INSERT ON banco.Prestamo, banco.Plazo_Fijo, banco.Plazo_Cliente, banco.Caja_Ahorro, banco.Tarjeta, banco.Cliente_CA, banco.Cliente, banco.Pago TO 'empleado';
 GRANT UPDATE ON banco.Cliente_CA, banco.Cliente, banco.Pago TO 'empleado'; 
+
+CREATE USER 'atm'@'localhost' IDENTIFIED BY 'atm';
+GRANT SELECT ON banco.trans_cajas_ahorro TO 'atm';
+
 
