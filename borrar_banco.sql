@@ -4,7 +4,7 @@ DROP USER admin@localhost;
 
 DROP USER empleado;
 
-DROP USER atm@localhost;
+DROP USER atm;
 
 FLUSH PRIVILEGES;
 
