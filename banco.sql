@@ -34,7 +34,7 @@ CREATE TABLE empleado(
 	telefono VARCHAR(25) NOT NULL,
 	cargo VARCHAR(45) NOT NULL,
 	password CHAR(32) NOT NULL,
-	nro_suc SMALLINT UNSIGNED NOT NULL CHECK (nro_suc > 99 AND nro_suc < 1000),
+	nro_suc SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (legajo),
 	CONSTRAINT fk_empleado_sucursal 
 		FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) 
@@ -60,7 +60,7 @@ CREATE TABLE plazo_fijo(
 	fecha_fin DATE NOT NULL,
 	tasa_interes DECIMAL(4,2) UNSIGNED NOT NULL CHECK (tasa_interes > 0),
 	interes DECIMAL(16,2) UNSIGNED NOT NULL CHECK (interes > 0),
-	nro_suc SMALLINT UNSIGNED NOT NULL CHECK (nro_suc > 99 AND nro_suc < 1000),
+	nro_suc SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_plazo),
 	CONSTRAINT fk_plazo_fijo_sucursal 
 		FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) 
@@ -95,15 +95,15 @@ CREATE TABLE prestamo(
 	tasa_interes DECIMAL(4,2) UNSIGNED NOT NULL CHECK (tasa_interes > 0),
 	interes DECIMAL(9,2) UNSIGNED NOT NULL CHECK (interes > 0),
 	valor_cuota DECIMAL(9,2) UNSIGNED NOT NULL CHECK (valor_cuota > 0),
-	legajo SMALLINT UNSIGNED NOT NULL CHECK (legajo > 999 AND legajo < 10000),
-	nro_cliente SMALLINT UNSIGNED NOT NULL CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
+	legajo SMALLINT UNSIGNED NOT NULL,
+	nro_cliente SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_prestamo),
 	CONSTRAINT fk_prestamo_legajo FOREIGN KEY (legajo) REFERENCES empleado(legajo) ON UPDATE CASCADE,
 	CONSTRAINT fk_prestamo_cliente FOREIGN KEY (nro_cliente) REFERENCES cliente(nro_cliente) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE pago(
-	nro_prestamo INT UNSIGNED CHECK (nro_prestamo > 9999999 AND nro_prestamo < 100000000),
+	nro_prestamo INT UNSIGNED,
 	nro_pago TINYINT UNSIGNED CHECK (nro_pago > 9 AND nro_pago < 100),
 	fecha_venc DATE NOT NULL,
 	fecha_pago DATE,
@@ -127,8 +127,8 @@ CREATE TABLE caja_ahorro(
 ) ENGINE=InnoDB;
 
 CREATE TABLE cliente_ca(
-	nro_cliente SMALLINT UNSIGNED CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
-	nro_ca INT UNSIGNED CHECK (nro_ca > 9999999 AND nro_ca < 100000000),
+	nro_cliente SMALLINT UNSIGNED,
+	nro_ca INT UNSIGNED,
 	PRIMARY KEY (nro_cliente, nro_ca),
 	CONSTRAINT fk_cliente_ca_cliente 
 		FOREIGN KEY (nro_cliente) REFERENCES cliente(nro_cliente) 
@@ -143,8 +143,8 @@ CREATE TABLE tarjeta(
 	pin CHAR(32) NOT NULL,
 	cvt CHAR(32) NOT NULL,
 	fecha_venc DATE NOT NULL,
-	nro_cliente SMALLINT UNSIGNED NOT NULL CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
-	nro_ca INT UNSIGNED NOT NULL CHECK (nro_ca > 9999999 AND nro_ca < 100000000),
+	nro_cliente SMALLINT UNSIGNED NOT NULL,
+	nro_ca INT UNSIGNED,
 	PRIMARY KEY (nro_tarjeta),
 	CONSTRAINT fk_tarjeta_cliente_cuenta 
 		FOREIGN KEY (nro_cliente, nro_ca) REFERENCES cliente_ca(nro_cliente, nro_ca) 
@@ -157,15 +157,15 @@ CREATE TABLE caja(
 ) ENGINE=InnoDB;
 
 CREATE TABLE ventanilla(
-	cod_caja MEDIUMINT UNSIGNED CHECK (cod_caja > 9999 AND cod_caja < 100000),
-	nro_suc SMALLINT UNSIGNED NOT NULL CHECK (nro_suc > 99 AND nro_suc < 1000),
+	cod_caja MEDIUMINT UNSIGNED,
+	nro_suc SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (cod_caja),
 	CONSTRAINT fk_ventanilla_caja FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) ON UPDATE CASCADE,
 	CONSTRAINT fk_ventanilla_sucursal FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE atm(
-	cod_caja MEDIUMINT UNSIGNED CHECK (cod_caja > 9999 AND cod_caja < 100000),
+	cod_caja MEDIUMINT UNSIGNED,
 	cod_postal SMALLINT UNSIGNED NOT NULL CHECK (cod_postal > 999 AND cod_postal < 10000),
 	direccion VARCHAR(45) NOT NULL,
 	PRIMARY KEY (cod_caja),
@@ -182,10 +182,10 @@ CREATE TABLE transaccion(
 ) ENGINE=InnoDB;
 
 CREATE TABLE debito(
-	nro_trans BIGINT UNSIGNED CHECK (nro_trans > 999999999 AND nro_trans < 10000000000),
+	nro_trans BIGINT UNSIGNED,
 	descripcion TEXT,
-	nro_cliente SMALLINT UNSIGNED NOT NULL CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
-	nro_ca INT UNSIGNED NOT NULL CHECK (nro_ca > 9999999 AND nro_ca < 100000000),
+	nro_cliente SMALLINT UNSIGNED NOT NULL,
+	nro_ca INT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_debito_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion(nro_trans) 
@@ -196,8 +196,8 @@ CREATE TABLE debito(
 ) ENGINE=InnoDB;
 
 CREATE TABLE transaccion_por_caja(
-	nro_trans BIGINT UNSIGNED CHECK (nro_trans > 999999999 AND nro_trans < 10000000000),
-	cod_caja MEDIUMINT UNSIGNED NOT NULL CHECK (cod_caja > 9999 AND cod_caja < 100000),
+	nro_trans BIGINT UNSIGNED,
+	cod_caja MEDIUMINT UNSIGNED,
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_transaccion_por_caja_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion(nro_trans) 
@@ -208,8 +208,8 @@ CREATE TABLE transaccion_por_caja(
 ) ENGINE=InnoDB;
 
 CREATE TABLE deposito(
-	nro_trans BIGINT UNSIGNED CHECK (nro_trans > 999999999 AND nro_trans < 10000000000),
-	nro_ca INT UNSIGNED NOT NULL CHECK (nro_ca > 9999999 AND nro_ca < 100000000),
+	nro_trans BIGINT UNSIGNED,
+	nro_ca INT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_deposito_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion_por_caja(nro_trans) 
@@ -220,9 +220,9 @@ CREATE TABLE deposito(
 ) ENGINE=InnoDB;
 
 CREATE TABLE extraccion(
-	nro_trans BIGINT UNSIGNED CHECK (nro_trans > 999999999 AND nro_trans < 10000000000),
-	nro_cliente SMALLINT UNSIGNED NOT NULL CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
-	nro_ca INT UNSIGNED NOT NULL CHECK (nro_ca > 9999999 AND nro_ca < 100000000),
+	nro_trans BIGINT UNSIGNED,
+	nro_cliente SMALLINT UNSIGNED NOT NULL,
+	nro_ca INT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_extraccion_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion_por_caja(nro_trans) 
@@ -233,8 +233,8 @@ CREATE TABLE extraccion(
 ) ENGINE=InnoDB;
 
 CREATE TABLE transferencia(
-	nro_trans BIGINT UNSIGNED CHECK (nro_trans > 999999999 AND nro_trans < 10000000000),
-	nro_cliente SMALLINT UNSIGNED NOT NULL CHECK (nro_cliente > 9999 AND nro_cliente < 100000),
+	nro_trans BIGINT UNSIGNED,
+	nro_cliente SMALLINT UNSIGNED NOT NULL,
 	origen INT UNSIGNED NOT NULL CHECK (origen > 9999999 AND origen < 100000000),
 	destino INT UNSIGNED NOT NULL CHECK (destino > 9999999 AND destino < 100000000),
 	PRIMARY KEY (nro_trans),
