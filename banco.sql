@@ -70,8 +70,8 @@ CREATE TABLE plazo_fijo(
 CREATE TABLE tasa_plazo_fijo(
 	periodo SMALLINT UNSIGNED CHECK (periodo > 99 AND periodo < 1000),
 	monto_inf DECIMAL(16,2) UNSIGNED CHECK (monto_inf > 0),
-	monto_sup DECIMAL(16,2) UNSIGNED CHECK (monto_inf > 0),
-	tasa DECIMAL(4,2) UNSIGNED NOT NULL CHECK (monto_inf > 0),
+	monto_sup DECIMAL(16,2) UNSIGNED CHECK (monto_sup > 0),
+	tasa DECIMAL(4,2) UNSIGNED NOT NULL CHECK (tasa > 0),
 	PRIMARY KEY (periodo, monto_inf, monto_sup)
 ) ENGINE=InnoDB;
 
@@ -114,8 +114,8 @@ CREATE TABLE pago(
 CREATE TABLE tasa_prestamo(
 	periodo SMALLINT UNSIGNED CHECK (periodo > 99 AND periodo < 1000),
 	monto_inf DECIMAL(10,2) UNSIGNED CHECK (monto_inf > 0),
-	monto_sup DECIMAL(10,2) UNSIGNED CHECK (monto_inf > 0),
-	tasa DECIMAL(4,2) UNSIGNED NOT NULL CHECK (monto_inf > 0),
+	monto_sup DECIMAL(10,2) UNSIGNED CHECK (monto_sup > 0),
+	tasa DECIMAL(4,2) UNSIGNED NOT NULL CHECK (tasa > 0),
 	PRIMARY KEY (periodo, monto_inf, monto_sup)
 ) ENGINE=InnoDB;
 
@@ -144,7 +144,7 @@ CREATE TABLE tarjeta(
 	cvt CHAR(32) NOT NULL,
 	fecha_venc DATE NOT NULL,
 	nro_cliente SMALLINT UNSIGNED NOT NULL,
-	nro_ca INT UNSIGNED,
+	nro_ca INT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_tarjeta),
 	CONSTRAINT fk_tarjeta_cliente_cuenta 
 		FOREIGN KEY (nro_cliente, nro_ca) REFERENCES cliente_ca(nro_cliente, nro_ca) 
@@ -197,7 +197,7 @@ CREATE TABLE debito(
 
 CREATE TABLE transaccion_por_caja(
 	nro_trans BIGINT UNSIGNED,
-	cod_caja MEDIUMINT UNSIGNED,
+	cod_caja MEDIUMINT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_transaccion_por_caja_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion(nro_trans) 
