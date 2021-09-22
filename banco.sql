@@ -17,7 +17,7 @@ CREATE TABLE sucursal(
 	direccion VARCHAR(45) NOT NULL,
 	telefono VARCHAR(45) NOT NULL,
 	horario VARCHAR(45) NOT NULL,
-	cod_postal SMALLINT UNSIGNED NOT NULL CHECK (cod_postal > 999 AND cod_postal < 10000),
+	cod_postal SMALLINT UNSIGNED NOT NULL,# CHECK (cod_postal > 999 AND cod_postal < 10000),
 	PRIMARY KEY (nro_suc),
 	CONSTRAINT fk_sucursal_ciudad 
 		FOREIGN KEY (cod_postal) REFERENCES ciudad(cod_postal) 
@@ -166,7 +166,7 @@ CREATE TABLE ventanilla(
 
 CREATE TABLE atm(
 	cod_caja MEDIUMINT UNSIGNED,
-	cod_postal SMALLINT UNSIGNED NOT NULL CHECK (cod_postal > 999 AND cod_postal < 10000),
+	cod_postal SMALLINT UNSIGNED NOT NULL,# CHECK (cod_postal > 999 AND cod_postal < 10000),
 	direccion VARCHAR(45) NOT NULL,
 	PRIMARY KEY (cod_caja),
 	CONSTRAINT fk_atm_caja FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) ON UPDATE CASCADE,
@@ -235,8 +235,8 @@ CREATE TABLE extraccion(
 CREATE TABLE transferencia(
 	nro_trans BIGINT UNSIGNED,
 	nro_cliente SMALLINT UNSIGNED NOT NULL,
-	origen INT UNSIGNED NOT NULL CHECK (origen > 9999999 AND origen < 100000000),
-	destino INT UNSIGNED NOT NULL CHECK (destino > 9999999 AND destino < 100000000),
+	origen INT UNSIGNED NOT NULL,# CHECK (origen > 9999999 AND origen < 100000000),
+	destino INT UNSIGNED NOT NULL,# CHECK (destino > 9999999 AND destino < 100000000),
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_transferencia_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion_por_caja(nro_trans) 

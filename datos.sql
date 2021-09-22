@@ -63,8 +63,8 @@ INSERT INTO plazo_cliente VALUES (12345678,10000);
 INSERT INTO plazo_cliente VALUES (87654321,10005);
 INSERT INTO plazo_cliente VALUES (12341234,10003);
 INSERT INTO plazo_cliente VALUES (43214321,10004);
---INSERT INTO plazo_cliente VALUES (10000004,10010);
---INSERT INTO plazo_cliente VALUES (10000005,10001);
+#INSERT INTO plazo_cliente VALUES (10000004,10010);
+#INSERT INTO plazo_cliente VALUES (10000005,10001);
 
 #Tabla prestamo
 # prestamo(nro_prestamo, fecha, cant_meses, monto, tasa_interes, interes, valor_cuota, legajo, nro_cliente)
@@ -137,13 +137,13 @@ INSERT INTO ventanilla VALUES (10004,300);
 # atm(cod_caja, cod_postal, direccion)
 
 INSERT INTO atm VALUES (12345,8109,"Quintana 300");
---INSERT INTO atm VALUES (12345,8109,"Brown 1300");
---INSERT INTO atm VALUES (12345,8135,"Brown 2300");
+#INSERT INTO atm VALUES (12345,8109,"Brown 1300");
+#INSERT INTO atm VALUES (12345,8135,"Brown 2300");
 INSERT INTO atm VALUES (10001,8135,"Paso 500");
---INSERT INTO atm VALUES (10001,8000,"Sarmiento 200");
+#INSERT INTO atm VALUES (10001,8000,"Sarmiento 200");
 INSERT INTO atm VALUES (10004,8000,"Alvear 50");
---INSERT INTO atm VALUES (10004,8000,"Mitre 300");
---INSERT INTO atm VALUES (10004,8000,"Mitre 1200");
+#INSERT INTO atm VALUES (10004,8000,"Mitre 300");
+#INSERT INTO atm VALUES (10004,8000,"Mitre 1200");
 
 #Tabla transaccion
 # transaccion(nro_trans, fecha, hora, monto)
