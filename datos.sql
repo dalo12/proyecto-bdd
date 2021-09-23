@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 #Carga de datos de prueba
 
+USE banco;
 
 #Tabla de ciudad
 # ciudad(cod_posta, nombre)

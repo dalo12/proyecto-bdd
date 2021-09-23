@@ -21,7 +21,7 @@ CREATE TABLE sucursal(
 	PRIMARY KEY (nro_suc),
 	CONSTRAINT fk_sucursal_ciudad 
 		FOREIGN KEY (cod_postal) REFERENCES ciudad(cod_postal) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE empleado(
@@ -38,7 +38,7 @@ CREATE TABLE empleado(
 	PRIMARY KEY (legajo),
 	CONSTRAINT fk_empleado_sucursal 
 		FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE cliente(
@@ -64,7 +64,7 @@ CREATE TABLE plazo_fijo(
 	PRIMARY KEY (nro_plazo),
 	CONSTRAINT fk_plazo_fijo_sucursal 
 		FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE tasa_plazo_fijo(
@@ -81,10 +81,10 @@ CREATE TABLE plazo_cliente(
 	PRIMARY KEY (nro_plazo, nro_cliente),
 	CONSTRAINT fk_plazo_cliente_plazo 
 		FOREIGN KEY (nro_plazo) REFERENCES plazo_fijo(nro_plazo) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_plazo_cliente_cliente 
 		FOREIGN KEY (nro_cliente) REFERENCES cliente(nro_cliente) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE prestamo(
@@ -98,8 +98,12 @@ CREATE TABLE prestamo(
 	legajo SMALLINT UNSIGNED NOT NULL,
 	nro_cliente SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (nro_prestamo),
-	CONSTRAINT fk_prestamo_legajo FOREIGN KEY (legajo) REFERENCES empleado(legajo) ON UPDATE CASCADE,
-	CONSTRAINT fk_prestamo_cliente FOREIGN KEY (nro_cliente) REFERENCES cliente(nro_cliente) ON UPDATE CASCADE
+	CONSTRAINT fk_prestamo_legajo 
+		FOREIGN KEY (legajo) REFERENCES empleado(legajo) 
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_prestamo_cliente 
+		FOREIGN KEY (nro_cliente) REFERENCES cliente(nro_cliente) 
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE pago(
@@ -108,7 +112,9 @@ CREATE TABLE pago(
 	fecha_venc DATE NOT NULL,
 	fecha_pago DATE,
 	PRIMARY KEY (nro_prestamo, nro_pago),
-	CONSTRAINT fk_pago_prestamo FOREIGN KEY (nro_prestamo) REFERENCES prestamo(nro_prestamo) ON UPDATE CASCADE
+	CONSTRAINT fk_pago_prestamo 
+		FOREIGN KEY (nro_prestamo) REFERENCES prestamo(nro_prestamo) 
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE tasa_prestamo(
@@ -132,10 +138,10 @@ CREATE TABLE cliente_ca(
 	PRIMARY KEY (nro_cliente, nro_ca),
 	CONSTRAINT fk_cliente_ca_cliente 
 		FOREIGN KEY (nro_cliente) REFERENCES cliente(nro_cliente) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_cliente_ca_caja 
 		FOREIGN KEY (nro_ca) REFERENCES caja_ahorro(nro_ca) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE tarjeta(
@@ -148,7 +154,7 @@ CREATE TABLE tarjeta(
 	PRIMARY KEY (nro_tarjeta),
 	CONSTRAINT fk_tarjeta_cliente_cuenta 
 		FOREIGN KEY (nro_cliente, nro_ca) REFERENCES cliente_ca(nro_cliente, nro_ca) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE caja(
@@ -160,8 +166,12 @@ CREATE TABLE ventanilla(
 	cod_caja MEDIUMINT UNSIGNED,
 	nro_suc SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (cod_caja),
-	CONSTRAINT fk_ventanilla_caja FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) ON UPDATE CASCADE,
-	CONSTRAINT fk_ventanilla_sucursal FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) ON UPDATE CASCADE
+	CONSTRAINT fk_ventanilla_caja 
+		FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) 
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_ventanilla_sucursal 
+		FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc) 
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE atm(
@@ -169,8 +179,12 @@ CREATE TABLE atm(
 	cod_postal SMALLINT UNSIGNED NOT NULL,# CHECK (cod_postal > 999 AND cod_postal < 10000),
 	direccion VARCHAR(45) NOT NULL,
 	PRIMARY KEY (cod_caja),
-	CONSTRAINT fk_atm_caja FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) ON UPDATE CASCADE,
-	CONSTRAINT fk_atm_ciudad FOREIGN KEY (cod_postal) REFERENCES ciudad(cod_postal) ON UPDATE CASCADE
+	CONSTRAINT fk_atm_caja 
+		FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) 
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_atm_ciudad 
+		FOREIGN KEY (cod_postal) REFERENCES ciudad(cod_postal) 
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE transaccion(
@@ -189,10 +203,10 @@ CREATE TABLE debito(
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_debito_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion(nro_trans) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_debito_cliente_caja 
 		FOREIGN KEY (nro_cliente, nro_ca) REFERENCES cliente_ca(nro_cliente, nro_ca) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE transaccion_por_caja(
@@ -201,10 +215,10 @@ CREATE TABLE transaccion_por_caja(
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_transaccion_por_caja_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion(nro_trans) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_transaccion_por_caja_caja 
 		FOREIGN KEY (cod_caja) REFERENCES caja(cod_caja) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE deposito(
@@ -213,10 +227,10 @@ CREATE TABLE deposito(
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_deposito_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion_por_caja(nro_trans) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_deposito_caja 
 		FOREIGN KEY (nro_ca) REFERENCES caja_ahorro(nro_ca) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE extraccion(
@@ -226,10 +240,10 @@ CREATE TABLE extraccion(
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_extraccion_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion_por_caja(nro_trans) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_extraccion_cliente_caja 
 		FOREIGN KEY (nro_cliente, nro_ca) REFERENCES cliente_ca(nro_cliente, nro_ca) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE transferencia(
@@ -240,13 +254,13 @@ CREATE TABLE transferencia(
 	PRIMARY KEY (nro_trans),
 	CONSTRAINT fk_transferencia_transaccion 
 		FOREIGN KEY (nro_trans) REFERENCES transaccion_por_caja(nro_trans) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_transferencia_cliente 
 		FOREIGN KEY (nro_cliente, origen) REFERENCES cliente_ca(nro_cliente, nro_ca) 
-		ON UPDATE CASCADE,
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	CONSTRAINT fk_transferencia_destino 
 		FOREIGN KEY (destino) REFERENCES caja_ahorro(nro_ca) 
-		ON UPDATE CASCADE
+		ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 #--------------------------------------------------
@@ -275,9 +289,9 @@ WHERE (transaccion.nro_trans = transferencia.nro_trans) AND (transferencia.orige
 UNION
 (
 /* Consulta para depósito */
-SELECT caja_ahorro.nro_ca, caja_ahorro.saldo, transaccion.nro_trans, transaccion.fecha, transaccion.hora, "deposito" AS "tipo", transaccion.monto, deposito.nro_ca AS "cod_caja", cliente.nro_cliente, cliente.tipo_doc, cliente.nro_doc, cliente.nombre, cliente.apellido, NULL AS "destino"
-FROM caja_ahorro, cliente_ca, transaccion, deposito, cliente
-WHERE (transaccion.nro_trans = deposito.nro_trans) AND (deposito.nro_ca = caja_ahorro.nro_ca) AND (caja_ahorro.nro_ca = cliente_ca.nro_ca) AND (cliente_ca.nro_cliente = cliente.nro_cliente)
+SELECT caja_ahorro.nro_ca, caja_ahorro.saldo, transaccion.nro_trans, transaccion.fecha, transaccion.hora, "deposito" AS "tipo", transaccion.monto, deposito.nro_ca AS "cod_caja", NULL AS nro_cliente, NULL AS tipo_doc, NULL AS nro_doc, NULL AS nombre, NULL AS apellido, NULL AS "destino"
+FROM caja_ahorro, cliente_ca, transaccion, deposito
+WHERE (transaccion.nro_trans = deposito.nro_trans) AND (deposito.nro_ca = caja_ahorro.nro_ca) AND (caja_ahorro.nro_ca = cliente_ca.nro_ca)
 );
 
 
@@ -289,20 +303,20 @@ GRANT ALL PRIVILEGES ON banco.* TO 'admin'@'localhost' WITH GRANT OPTION;
 
 DROP USER IF EXISTS ''@'localhost';
 
-CREATE USER 'empleado' IDENTIFIED BY 'empleado';
-GRANT SELECT ON banco.empleado TO 'empleado';
-GRANT SELECT ON banco.sucursal TO 'empleado';
-GRANT SELECT ON banco.tasa_plazo_fijo TO 'empleado';
-GRANT SELECT ON banco.tasa_prestamo TO 'empleado';
-GRANT SELECT, INSERT ON banco.prestamo TO 'empleado';
-GRANT SELECT, INSERT ON banco.plazo_fijo TO 'empleado';
-GRANT SELECT, INSERT ON banco.plazo_cliente TO 'empleado';
-GRANT SELECT, INSERT ON banco.caja_ahorro TO 'empleado';
-GRANT SELECT, INSERT ON banco.tarjeta TO 'empleado';
-GRANT SELECT, INSERT, UPDATE ON banco.cliente_ca TO 'empleado';
-GRANT SELECT, INSERT, UPDATE ON banco.cliente TO 'empleado';
-GRANT SELECT, INSERT, UPDATE ON banco.pago TO 'empleado';
+CREATE USER 'empleado'@'%' IDENTIFIED BY 'empleado';
+GRANT SELECT ON banco.empleado TO 'empleado'@'%';
+GRANT SELECT ON banco.sucursal TO 'empleado'@'%';
+GRANT SELECT ON banco.tasa_plazo_fijo TO 'empleado'@'%';
+GRANT SELECT ON banco.tasa_prestamo TO 'empleado'@'%';
+GRANT SELECT, INSERT ON banco.prestamo TO 'empleado'@'%';
+GRANT SELECT, INSERT ON banco.plazo_fijo TO 'empleado'@'%';
+GRANT SELECT, INSERT ON banco.plazo_cliente TO 'empleado'@'%';
+GRANT SELECT, INSERT ON banco.caja_ahorro TO 'empleado'@'%';
+GRANT SELECT, INSERT ON banco.tarjeta TO 'empleado'@'%';
+GRANT SELECT, INSERT, UPDATE ON banco.cliente_ca TO 'empleado'@'%';
+GRANT SELECT, INSERT, UPDATE ON banco.cliente TO 'empleado'@'%';
+GRANT SELECT, INSERT, UPDATE ON banco.pago TO 'empleado'@'%';
 
-CREATE USER 'atm' IDENTIFIED BY 'atm';
-GRANT SELECT ON banco.trans_cajas_ahorro TO 'atm';
-GRANT SELECT, UPDATE ON banco.tarjeta TO 'atm';
+CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';
+GRANT SELECT ON banco.trans_cajas_ahorro TO 'atm'@'%';
+GRANT SELECT, UPDATE ON banco.tarjeta TO 'atm'@'%';
